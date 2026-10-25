@@ -186,24 +186,33 @@ step('package metadata matches the code', () => {
 step('README claims match measurements', () => {
   const readme = readFileSync(join(root, 'README.md'), 'utf8');
   const meas = JSON.parse(readFileSync(join(root, 'docs', 'MEASUREMENTS.json'), 'utf8'));
-  const row = meas.rows[0];
 
-  // Parse every "N,NNN 条/秒" style claim and require at least one to be within
-  // 20% of the freshly measured value — the point is to catch stale marketing
-  // numbers, so the tolerance must be tight enough to fail on drift.
-  const claims = [...readme.matchAll(/([\d,]{3,})\s*条\/秒/g)].map((m) => Number(m[1].replace(/,/g, '')));
-  must(claims.length > 0, 'README states no throughput claim');
-  const near = claims.filter((c) => Math.abs(c - row.entriesPerSec) / row.entriesPerSec <= 0.2);
-  must(near.length > 0, `README claims ${claims.join('/')} entries/s, measured ${row.entriesPerSec}`);
+  // Claim shape: "15,000–25,000 条/秒". The measured value must fall inside the
+  // published range — a range that no longer contains reality has to be updated.
+  const eps = /([\d,]{3,})[–-]([\d,]{3,})\s*条\/秒/.exec(readme);
+  must(eps, 'README states no throughput range ("N–N 条/秒")');
+  const lo = Number(eps[1].replace(/,/g, ''));
+  const hi = Number(eps[2].replace(/,/g, ''));
+  const measuredEps = Math.min(...meas.rows.map((r) => r.entriesPerSec));
+  const measuredEpsMax = Math.max(...meas.rows.map((r) => r.entriesPerSec));
+  must(
+    (measuredEps >= lo && measuredEps <= hi) || (measuredEpsMax >= lo && measuredEpsMax <= hi),
+    `README says ${lo}-${hi}/s, measured ${measuredEps}-${measuredEpsMax}/s`,
+  );
 
-  const ratios = [...readme.matchAll(/(\d+(?:\.\d+)?)\s*×/g)].map((m) => Number(m[1]));
-  must(ratios.some((r) => Math.abs(r - row.ratio) <= 0.3), `README ratio ${ratios.join('/')} vs measured ${row.ratio}`);
+  const ratio = /(\d+(?:\.\d+)?)[–-](\d+(?:\.\d+)?)\s*倍/.exec(readme);
+  must(ratio, 'README states no ratio range ("N–N 倍")');
+  const rLo = Number(ratio[1]);
+  const rHi = Number(ratio[2]);
+  for (const r of meas.rows) {
+    must(r.ratio >= rLo && r.ratio <= rHi, `README ratio ${rLo}-${rHi}x does not contain measured ${r.ratio}x`);
+  }
 
   const testCount = [...readme.matchAll(/(\d{2,3})\s*项/g)].map((m) => Number(m[1]));
   const suite = runNode(['--test', 'test/crc32.test.js', 'test/parse.test.js', 'test/audit.test.js', 'test/salvage.test.js', 'test/writer.test.js', 'test/cli.test.js', 'test/interop.test.js']);
   const pass = Number((/# pass (\d+)/.exec(suite.stdout) || [0, 0])[1]);
   must(testCount.some((n) => n === pass), `README test count ${testCount.join('/')} vs actual ${pass}`);
-  return `claims ${near[0]}/s vs measured ${row.entriesPerSec}; ratio & test count agree (${pass})`;
+  return `${measuredEps}-${measuredEpsMax}/s and ${meas.rows.map((r) => `${r.ratio}x`).join('/')} inside published ranges; ${pass} tests`;
 });
 
 const total = executed + skipped + failed;

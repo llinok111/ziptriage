@@ -3,11 +3,13 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { join, resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { audit } from '../src/index.js';
 import { buildArchive } from './helpers/craft.js';
 
-const ROOT = resolve(import.meta.dirname, '..');
+// import.meta.dirname only exists from Node 20.11; this package claims >=18.
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const CLI = join(ROOT, 'bin', 'ziptriage.js');
 const dir = mkdtempSync(join(tmpdir(), 'ziptriage-cli-'));
 const enc = new TextEncoder();
