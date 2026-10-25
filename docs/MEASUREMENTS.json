@@ -9,28 +9,28 @@
       "corpus": "200 entries × 8 KiB",
       "bytes": 267460,
       "entries": 200,
-      "unzipSyncMs": 2.82,
-      "auditMs": 9.28,
-      "auditNoCrcMs": 3.23,
-      "ratio": 3.29,
-      "entriesPerSec": 21560,
-      "mbPerSec": 27.5
+      "unzipSyncMs": 2.79,
+      "auditMs": 10.46,
+      "auditNoCrcMs": 3.3,
+      "ratio": 3.75,
+      "entriesPerSec": 19116,
+      "mbPerSec": 24.4
     },
     {
       "corpus": "2000 entries × 8 KiB",
       "bytes": 2648030,
       "entries": 2000,
-      "unzipSyncMs": 25.83,
-      "auditMs": 84.28,
-      "auditNoCrcMs": 33.16,
-      "ratio": 3.26,
-      "entriesPerSec": 23729,
-      "mbPerSec": 30
+      "unzipSyncMs": 28.26,
+      "auditMs": 95.84,
+      "auditNoCrcMs": 33.25,
+      "ratio": 3.39,
+      "entriesPerSec": 20868,
+      "mbPerSec": 26.3
     }
   ],
   "salvage": {
     "corpus": "500 entries × 16 KiB, central directory wiped",
-    "ms": 190.52,
+    "ms": 220.26,
     "recovered": 500,
     "verified": 500
   }
