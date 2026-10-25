@@ -1,0 +1,9 @@
+# force LF so a Windows checkout produces the same bytes as Linux
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.zip binary
+*.png binary

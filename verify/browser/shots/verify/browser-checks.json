@@ -1,0 +1,91 @@
+{
+  "checks": [
+    {
+      "name": "page loads and auto-runs a sample",
+      "ok": true,
+      "detail": "verdict=CLEAN"
+    },
+    {
+      "name": "codec reported as ready",
+      "ok": true,
+      "detail": "fflate umd · codec ready"
+    },
+    {
+      "name": "no external network requests",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "sample \"healthy\" -> CLEAN",
+      "ok": true,
+      "detail": "got CLEAN"
+    },
+    {
+      "name": "sample \"bitflip\" -> CORRUPT",
+      "ok": true,
+      "detail": "got CORRUPT"
+    },
+    {
+      "name": "sample \"truncated\" -> UNREADABLE",
+      "ok": true,
+      "detail": "got UNREADABLE"
+    },
+    {
+      "name": "sample \"destroyed\" -> UNREADABLE",
+      "ok": true,
+      "detail": "got UNREADABLE"
+    },
+    {
+      "name": "bitflip shows a damaged row with mismatching CRC",
+      "ok": true,
+      "detail": "✗ 损坏 | assets/photo.dat | stored | 5.9 KB | 5.9 KB | ✗ 8833a90c ≠ 9d811b8a"
+    },
+    {
+      "name": "salvage reports recovered entries",
+      "ok": true,
+      "detail": "恢复 3 条（11.3 KB）· 完整 3 / 部分 0 · 放弃 0"
+    },
+    {
+      "name": "salvage self-check is clean",
+      "ok": true,
+      "detail": "修复包自检：3 条 · CLEAN · 410 B"
+    },
+    {
+      "name": "download link present",
+      "ok": true,
+      "detail": "blob:http://127.0.0.1:58610/e0dcccf1-52f7-4d8c-9104-d56abeb9d0da"
+    },
+    {
+      "name": "repaired archive downloaded",
+      "ok": true,
+      "detail": "E:\\WorkBuddy-Work\\workbuddy-github-2\\ziptriage\\verify\\browser\\shots\\verify\\downloaded-repaired.zip"
+    },
+    {
+      "name": "downloaded repair re-audits CLEAN in the browser",
+      "ok": true,
+      "detail": "CLEAN"
+    },
+    {
+      "name": "truncated sample offers a recovery hint",
+      "ok": true,
+      "detail": "eocd-missing ×1 — no End Of Central Directory record — the archive index is gone (truncated or overwritten)scan-recovera"
+    },
+    {
+      "name": "JSON report export triggers a download",
+      "ok": true,
+      "detail": "sample-truncated.report.json"
+    },
+    {
+      "name": "no uncaught page errors",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "no console errors",
+      "ok": true,
+      "detail": "none"
+    }
+  ],
+  "pass": 17,
+  "fail": 0
+}

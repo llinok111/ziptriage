@@ -1,0 +1,13 @@
+node_modules/
+*.tgz
+package-lock.json.bak
+
+# verification artefacts: regenerate with "node verify/browser/demo-verify.cjs"
+verify/browser/shots/verify/*.png
+verify/browser/shots/verify/downloaded-repaired.zip
+
+# local scratch
+.tmp/
+*.log
+.DS_Store
+Thumbs.db

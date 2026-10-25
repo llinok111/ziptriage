@@ -1,0 +1,52 @@
+{
+  "name": "ziptriage",
+  "version": "0.1.0",
+  "description": "ZIP container integrity audit and salvage — verify CRC-32 of every entry, cross-check headers, and rebuild the index when it is destroyed",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "ziptriage": "./bin/ziptriage.js"
+  },
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./browser": "./src/browser.js",
+    "./core": "./src/core/audit.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "docs",
+    "demo",
+    "scripts",
+    "test",
+    "bench",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:watch": "node --test --watch test/*.test.js",
+    "demo": "node scripts/build-demo.js",
+    "verify": "node scripts/verify-all.js",
+    "baseline": "node scripts/baseline-upstream.js",
+    "verify:browser": "node verify/browser/demo-verify.cjs",
+    "serve": "node scripts/serve-demo.js"
+  },
+  "dependencies": {
+    "fflate": "0.8.3"
+  },
+  "keywords": [
+    "zip",
+    "crc32",
+    "integrity",
+    "corruption",
+    "salvage",
+    "forensics",
+    "unzip"
+  ]
+}

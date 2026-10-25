@@ -1,0 +1,51 @@
+name: ci
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [18, 20, 22]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install
+        run: npm ci
+      - name: Unit + integration tests
+        run: node --test test/crc32.test.js test/parse.test.js test/audit.test.js test/salvage.test.js test/writer.test.js test/cli.test.js test/interop.test.js
+      - name: Upstream baseline (must stay reproducible)
+        run: node scripts/baseline-upstream.js
+      - name: Demo assets are offline and present
+        run: node scripts/build-demo.js
+      - name: Package resolves from a clean consumer
+        run: |
+          npm pack
+          node -e "const p=require('./package.json');const f=require('fs');if(!f.existsSync(p.bin.ziptriage))throw new Error('bin missing');if(!f.existsSync(p.main))throw new Error('main missing');console.log('metadata ok', p.name, p.version)"
+
+  acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Acceptance gate
+        run: node scripts/verify-all.js
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            docs/BASELINE.json
+            docs/MEASUREMENTS.json

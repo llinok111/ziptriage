@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="data:," />
+<title>ZIP 分诊台 · 容器级完整性审计</title>
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<header class="bar">
+  <div class="brand">
+    <span class="mark" aria-hidden="true">◇</span>
+    <div>
+      <h1>ZIP 分诊台</h1>
+      <p class="sub">容器级完整性审计与打捞 · CRC-32 逐条核对 · 全程本地，文件不出浏览器</p>
+    </div>
+  </div>
+  <div class="meta" id="engine">引擎加载中…</div>
+</header>
+
+<main>
+  <section class="panel drop" id="drop">
+    <input type="file" id="file" accept=".zip,application/zip" hidden />
+    <p class="drop-title">把一个 ZIP 拖进来，或 <button class="link" id="pick">选择文件</button></p>
+    <p class="drop-hint">也可以先看示例：</p>
+    <div class="samples">
+      <button data-sample="healthy">健康包</button>
+      <button data-sample="bitflip">位翻转（stored）</button>
+      <button data-sample="truncated">索引被截断</button>
+      <button data-sample="destroyed">中心目录被抹掉</button>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="result">
+    <div class="verdict-row">
+      <div class="pill" id="verdict">—</div>
+      <div class="stats" id="stats"></div>
+    </div>
+    <p class="container-line" id="container"></p>
+
+    <h2>条目<span class="count" id="entryCount"></span></h2>
+    <div class="table-wrap">
+      <table id="entries">
+        <thead>
+          <tr><th>状态</th><th>名称</th><th>方法</th><th class="num">声明大小</th><th class="num">实际解码</th><th>CRC-32</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h2>发现<span class="count" id="findingCount"></span></h2>
+    <ul class="findings" id="findings"></ul>
+
+    <div class="actions">
+      <button id="salvage" class="primary">打捞可恢复内容</button>
+      <a id="download" class="ghost hidden" download="repaired.zip">下载修复包</a>
+      <button id="downloadJson" class="ghost">导出 JSON 报告</button>
+    </div>
+    <pre class="salvage-out hidden" id="salvageOut"></pre>
+  </section>
+
+  <section class="panel hidden" id="errorPanel">
+    <h2>无法读取</h2>
+    <p id="errorText"></p>
+  </section>
+</main>
+
+<footer>
+  <span>ziptriage <span id="version">0.0.0</span></span>
+  <span>解码器 fflate（MIT）· 容器层本仓库（MIT）</span>
+</footer>
+
+<script src="./vendor/fflate.umd.js"></script>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

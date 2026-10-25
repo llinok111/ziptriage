@@ -1,0 +1,37 @@
+{
+  "generatedBy": "bench/bench.js",
+  "node": "v22.22.2",
+  "platform": "win32-x64",
+  "runs": 5,
+  "metric": "median of 5 runs, milliseconds",
+  "rows": [
+    {
+      "corpus": "200 entries × 8 KiB",
+      "bytes": 267460,
+      "entries": 200,
+      "unzipSyncMs": 2.6,
+      "auditMs": 8.89,
+      "auditNoCrcMs": 2.93,
+      "ratio": 3.42,
+      "entriesPerSec": 22504,
+      "mbPerSec": 28.7
+    },
+    {
+      "corpus": "2000 entries × 8 KiB",
+      "bytes": 2648030,
+      "entries": 2000,
+      "unzipSyncMs": 24.58,
+      "auditMs": 83.43,
+      "auditNoCrcMs": 29.88,
+      "ratio": 3.39,
+      "entriesPerSec": 23972,
+      "mbPerSec": 30.3
+    }
+  ],
+  "salvage": {
+    "corpus": "500 entries × 16 KiB, central directory wiped",
+    "ms": 185.4,
+    "recovered": 500,
+    "verified": 500
+  }
+}

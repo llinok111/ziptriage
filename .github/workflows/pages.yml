@@ -1,0 +1,53 @@
+name: pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # The demo runs from committed files only: no npm install, no bundler.
+      # demo/index.html loads ./vendor/fflate.umd.js and imports ../src/core/*.js,
+      # so the site root has to contain both demo/ and src/ side by side.
+      - name: Assemble site (demo + src only, no node_modules)
+        run: |
+          set -eu
+          mkdir -p _site
+          cp -r demo src index.html _site/
+          test -f _site/demo/index.html
+          test -f _site/demo/vendor/fflate.umd.js
+          test -f _site/src/core/audit.js
+          test -f _site/src/index.js
+          du -sh _site
+
+      - name: Fail if the page references a remote asset
+        run: |
+          set -eu
+          if grep -RE '(src|href)="https?://[^"]+\.(js|css)"' _site/demo _site/index.html; then
+            echo "remote asset reference found"; exit 1
+          fi
+          echo "offline check ok"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

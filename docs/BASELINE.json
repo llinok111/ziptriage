@@ -1,0 +1,98 @@
+{
+  "generatedBy": "scripts/baseline-upstream.js",
+  "fflateVersion": "0.8.3",
+  "node": "v22.22.2",
+  "platform": "win32-x64",
+  "cases": [
+    {
+      "id": "stored-bitflip",
+      "claim": "unzipSync returns corrupt bytes without error",
+      "upstream": {
+        "threw": false,
+        "bytes": 15000,
+        "differingBytes": 1
+      },
+      "ziptriage": {
+        "verdict": "corrupt",
+        "exitCode": 4,
+        "findings": [
+          "crc-mismatch"
+        ]
+      }
+    },
+    {
+      "id": "deflate-bitflip",
+      "claim": "one bit flipped at payload+291 of 583 compressed bytes",
+      "upstream": {
+        "threw": true,
+        "code": 0,
+        "message": "unexpected EOF"
+      },
+      "ziptriage": {
+        "verdict": "corrupt",
+        "findings": [
+          "deflate-error"
+        ]
+      }
+    },
+    {
+      "id": "cd-destroyed",
+      "claim": "no salvage path: the whole archive is rejected",
+      "upstream": {
+        "threw": true,
+        "code": 14,
+        "message": "unknown compression type 65535"
+      },
+      "ziptriage": {
+        "verdict": "unreadable",
+        "recoverableViaScan": 3
+      }
+    },
+    {
+      "id": "truncated",
+      "claim": "numeric error code 13 only, no indication of what survived",
+      "upstream": {
+        "threw": true,
+        "code": 13,
+        "message": "invalid zip data"
+      },
+      "ziptriage": {
+        "verdict": "unreadable",
+        "recoverableViaScan": 3,
+        "codes": [
+          "eocd-missing",
+          "scan-recoverable"
+        ]
+      }
+    },
+    {
+      "id": "duplicate-names",
+      "claim": "last entry silently wins; the first is unreachable",
+      "upstream": {
+        "threw": false,
+        "keys": [
+          "same.txt"
+        ],
+        "value": "SECOND"
+      },
+      "ziptriage": {
+        "verdict": "warnings",
+        "codes": [
+          "duplicate-name"
+        ],
+        "entries": 2
+      }
+    },
+    {
+      "id": "roundtrip-control",
+      "claim": "healthy archives keep working",
+      "upstream": {
+        "threw": false,
+        "value": "hello"
+      },
+      "ziptriage": {
+        "verdict": "clean"
+      }
+    }
+  ]
+}

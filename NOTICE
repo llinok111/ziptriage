@@ -1,0 +1,54 @@
+ziptriage
+=========
+Copyright (c) 2026 llinok111 · MIT
+
+This product bundles and depends on third-party software. The notices below
+are required by their licenses and must be kept with any redistribution.
+
+--------------------------------------------------------------------------------
+fflate 0.8.3 — MIT
+https://github.com/101arrowz/fflate
+Copyright (c) 2026 Arjun Barrett
+
+Used as: runtime dependency (`inflateSync`, `deflateSync`, `Inflate`) and as an
+unmodified copy of its UMD build in `demo/vendor/fflate.umd.js`.
+
+No changes were made to fflate's source. Its ZIP container layer is not
+re-exported as this project's own API; this project implements its own
+container parser, CRC verification, salvage and ZIP writer.
+
+License text as distributed with fflate:
+
+  MIT License
+
+  Copyright (c) 2026 Arjun Barrett
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+--------------------------------------------------------------------------------
+Format references
+  PKWARE APPNOTE.TXT 6.3.10 — ZIP format specification (section 4.3 records,
+  4.4.5 compression methods, 4.4.7 CRC-32, 4.5.3 ZIP64 extra field).
+  RFC 1951 — DEFLATE. RFC 1952 — GZIP (CRC-32/ISO-HDLC check value 0xCBF43926).
+  These are specifications, not code; no code was copied from them.
+
+--------------------------------------------------------------------------------
+Test-only reference implementation
+  Python 3 `zipfile` (PSF License) is invoked as an external oracle by
+  `test/interop.test.js`. It is not bundled and not required at runtime.
