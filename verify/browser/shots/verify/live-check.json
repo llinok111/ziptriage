@@ -1,0 +1,11 @@
+{
+  "url": "https://llinok111.github.io/ziptriage/",
+  "verdict": "CLEAN",
+  "engine": "fflate umd · codec ready",
+  "tableRows": 3,
+  "findingLines": 0,
+  "salvageFirstLine": "恢复 3 条（11.3 KB）· 完整 3 / 部分 0 · 放弃 0",
+  "salvageLastLine": "修复包自检：3 条 · CLEAN · 410 B",
+  "errors": [],
+  "offOriginRequests": []
+}

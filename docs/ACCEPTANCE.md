@@ -92,7 +92,41 @@ executed 17 · passed 17 · failed 0
 | 包体 | 70,667 字节；依赖仅 fflate |
 | `node scripts/serve-demo.js` → `http://127.0.0.1:4173/demo/` | 页面自跑样例，0 外部请求 |
 
-## 4. 未验证 / 明确限制
+## 4. 跨平台 CI（真机 Linux + Windows × Node 18/20/22）
+
+```
+test (ubuntu-latest, 18)   success      test (windows-latest, 18)   success
+test (ubuntu-latest, 20)   success      test (windows-latest, 20)   success
+test (ubuntu-latest, 22)   success      test (windows-latest, 22)   success
+acceptance                 success
+pages                      success
+```
+
+**首轮 6 个矩阵 + acceptance 全部失败**，抓到两个本地 Node 22 + Windows 永远发现不了的缺陷：
+
+| # | 缺陷 | 证据 | 根因 |
+|---|---|---|---|
+| 1 | `test/cli.test.js` 在 Node 18 直接崩 | `ERR_INVALID_ARG_TYPE … at resolve (node:path:168) at cli.test.js:10` | 用了 `import.meta.dirname`，该属性 20.11 才有；而 `engines` 声明 `>=18` —— **在声称支持的版本上跑不起来** |
+| 2 | acceptance 的 README 校验 FAIL | `README ratio 3.4 vs measured 4.45` | 比值随机器变：Windows 3.26–3.52×，ubuntu-latest 4.45×。README 写死单值必然是错的 |
+
+修复方式：① 改 `fileURLToPath(import.meta.url)`；② README 改为发布**区间**，验收脚本改为断言"实测值落在发布区间内"（区间不再包含现实就 FAIL）。
+第二轮 8 个 job 全绿。
+
+这条经验值得记住：**"本地全绿"这句话，只有在跨平台跨版本矩阵绿了之后才成立。**
+
+## 5. 线上部署验证
+
+| 项 | 结果 |
+|---|---|
+| `https://llinok111.github.io/ziptriage/` | 200，落地页 → 自动跳转 `/demo/` |
+| `https://llinok111.github.io/ziptriage/demo/` | 200，真实渲染：verdict=CLEAN、3 行条目表、`fflate umd · codec ready` |
+| `https://llinok111.github.io/ziptriage/src/core/audit.js` | 200（demo 的 `../src/` 相对导入可解析） |
+| 线上点「中心目录被抹掉」→「打捞」 | `恢复 3 条（11.3 KB）· 完整 3 / 部分 0`，自检 `CLEAN · 410 B` |
+| 页面 JS 错误 / 控制台错误 | 0 |
+| 跨域外部请求 | 0（全部 `llinok111.github.io` 同源） |
+| 线上截图像素统计 | 1280×900、322 色、亮度 10.4、分带 stdev 18.8/21.2/27.3/15.5 → OK |
+
+## 6. 未验证 / 明确限制
 
 | 项 | 状态 | 原因 |
 |---|---|---|
